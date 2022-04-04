@@ -184,6 +184,7 @@ from email.parser import BytesParser
 import email
 import textwrap
 from bs4 import BeautifulSoup
+import glob
 
 # initilized the dictionary to store relavent data
 dict = {
@@ -199,9 +200,9 @@ def get_email_info(fp):
     msg = BytesParser(policy=policy.default).parse(fp)
     print(type(msg))
     body = msg.get_body(preferencelist=('plain')).get_content()
-    print(type(body))
+    # print(type(body))
     soup = BeautifulSoup(body)
-    print(type(body))
+    # print(type(body))
     
     dict["from"].append(msg['from'])
     dict["to"].append(msg['to'])
@@ -236,10 +237,11 @@ def set_csv(dic):
 # main Function:
 path = "./mails/mail"
 ext = ".eml"
-for count in range(1,3):
-    with open(path+str(count)+ext, 'rb') as fp:
+list_of_files = glob.glob("./Emails/*.eml")
+for file in list_of_files:
+    with open(file, 'rb') as fp:
         get_email_info(fp)
 
 set_csv(dict)
 output = pd.read_csv("./output.csv")
-# print(output)
+print(output)
